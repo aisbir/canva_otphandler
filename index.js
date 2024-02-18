@@ -25,6 +25,29 @@ app.get('/api/get/canva/:gmail', async (req, res) => {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   });
+  app.get('/api/get/delete/canva/:gmail', async (req, res) => {
+    const { gmail } = req.params;
+
+    console.log("New Otp Arrived\n" + gmail);
+
+    try {
+        await client.connect();
+        const db = client.db('otp');
+        const collection = db.collection('canva');
+
+        const result = await collection.deleteOne({ email: gmail });
+
+        if (result.deletedCount > 0) {
+      
+            res.json({ status: true, message: 'Deleted' });
+        } else {
+            res.json({ status: false, message: 'Data Not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting data from MongoDB:', error);
+        res.status(500).json({ status: false, message: 'Internal Server Error' });
+    }
+});
   app.post('/api/post/canva/:gmail/:otp/:message', async (req, res) => {
     const { gmail, otp, message } = req.params;
 
