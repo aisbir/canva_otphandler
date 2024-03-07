@@ -14,6 +14,8 @@ const mongoapikey = 'mongodb+srv://susiber:rushidev123@cluster0.3dweg2k.mongodb.
 const clientss = new MongoClient(mongoapikey)
 mongoconect()
 app.get('/api/get/current/ver/autoco', async (req, res) => {
+    await client.connect();
+  await clientss.connect();
   const apikey = req.query.apikey
   try {
     const database = client.db('version');
@@ -57,7 +59,8 @@ app.get('/api/get/current/ver/autoco', async (req, res) => {
 
 
 app.post('/api/post/current/ver/autoco', async (req, res) => {
-  
+    await client.connect();
+  await clientss.connect();
   try {
     await client.connect();
     const database = client.db('version');
@@ -86,7 +89,8 @@ app.post('/api/post/current/ver/autoco', async (req, res) => {
 });
 app.get('/api/get/updater/botautocheckout', async (req, res) => {
   const { apikey, sha} = req.query
-
+  await client.connect();
+  await clientss.connect();
   try {
     const database = clientss.db('asbir');
     const collection = database.collection('lisensi');
@@ -105,7 +109,8 @@ app.get('/api/get/updater/botautocheckout', async (req, res) => {
 
 app.get('/api/get/canva/:gmail', async (req, res) => {
     const gmail = req.params.gmail;
-
+  await client.connect();
+  await clientss.connect();
     try {
       const db = client.db('otp');
       const collection = db.collection('canva');
@@ -123,7 +128,8 @@ app.get('/api/get/canva/:gmail', async (req, res) => {
   });
   app.get('/api/get/delete/canva/:gmail', async (req, res) => {
     const { gmail } = req.params;
-
+  await client.connect();
+  await clientss.connect();
     console.log("New Otp Arrived\n" + gmail);
 
     try {
@@ -144,6 +150,8 @@ app.get('/api/get/canva/:gmail', async (req, res) => {
     }
 });
   app.post('/api/post/canva/:gmail/:otp/:message', async (req, res) => {
+      await client.connect();
+  await clientss.connect();
     const { gmail, otp, message } = req.params;
 
     console.log("New Otp Arrived\n"+ gmail);
