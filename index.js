@@ -6,6 +6,92 @@ const port = 3000;
 const { MongoClient } = require('mongodb');
 const mongoURI = 'mongodb+srv://bjirgann:aisbirgaming@cluster0.jqfnmva.mongodb.net/';
 const client = new MongoClient(mongoURI)
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
+const mongoapikey = 'mongodb+srv://susiber:rushidev123@cluster0.3dweg2k.mongodb.net/';
+const clientss = new MongoClient(mongoapikey)
+
+app.get('/api/get/current/ver/autoco', async (req, res) => {
+  try {
+    await client.connect();
+    const database = client.db('version');
+    const collection = database.collection('co');
+    const result = await collection.find({}).toArray();
+    const commit = result.length > 0 ? {
+      _id: result[0]._id,
+      sha: result[0].sha,
+      message: result[0].message,
+      timestamp: result[0].timestamp,
+    } : null;
+
+    const response = {
+      status: true,
+      script_type: "botautocheckout",
+      information: {
+        author: "@aisbircubes",
+        isPaid: true
+      },
+      commits: commit,
+      all_commits: result
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ status: false, error: 'Internal Server Error' });
+  }
+});
+
+
+app.post('/api/post/current/ver/autoco', async (req, res) => {
+  
+  try {
+    await client.connect();
+    const database = client.db('version');
+    const collection = database.collection('co');
+    const { sha, message } = req.body;
+    if (!sha || !message) {
+      return res.status(400).json({ status: false, error: 'Missing required parameters' });
+    }
+    const document = {
+      sha,
+      message,
+      timestamp: new Date(),
+    };
+    const result = await collection.insertOne(document);
+    await client.close();
+    const response = {
+      status: true,
+      message: 'Saved current version...',
+      insertedId: result.insertedId,
+    };
+    res.json(response);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ status: false, error: 'Internal Server Error' });
+  }
+});
+app.get('/api/get/updater/botautocheckout', async (req, res) => {
+  const { apikey, sha} = req.query
+await clientss.connect()
+
+  try {
+    const database = clientss.db('asbir');
+    const collection = database.collection('lisensi');
+    const result = await collection.findOne({ apikey: apikey });
+
+    if (result) {
+      res.json({status: true, sha: sha, zip: `https://jar.aisbircubes.my.id/botautocostore/${sha}.zip`, code: 202});
+    } else {
+     return res.status(405).json({status: false, message: "Apikey Invalid Please Input Your Valid Apikey", code: 405})
+    }
+  } catch (error) {
+    console.error('Error fetching data from MongoDB:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 app.get('/api/get/canva/:gmail', async (req, res) => {
     const gmail = req.params.gmail;
