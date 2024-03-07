@@ -12,15 +12,16 @@ app.use(bodyParser.json());
 
 const mongoapikey = 'mongodb+srv://susiber:rushidev123@cluster0.3dweg2k.mongodb.net/';
 const clientss = new MongoClient(mongoapikey)
-
+mongoconect()
 app.get('/api/get/current/ver/autoco', async (req, res) => {
-  const { apikey } = req.query.apikey
+  const apikey = req.query.apikey
   try {
-    await client.connect();
     const database = client.db('version');
+
     const collection = database.collection('co');
-    const cekapi = database.collection('lisensi');
-    const myApi = await cekapi.findOne({ apikey: apikey });
+    const databass = clientss.db('asbir');
+    const collectionn = databass.collection('lisensi');
+    const resultt = await collectionn.findOne({ apikey: apikey });
     const result = await collection.find({}).toArray();
     const commit = result.length > 0 ? {
       _id: result[0]._id,
@@ -39,7 +40,10 @@ app.get('/api/get/current/ver/autoco', async (req, res) => {
       commits: commit,
       all_commits: result
     };
-    if (myApi) {
+    if(!apikey) {
+      return res.status(401).json({status: false, message: "You aren't authorized to visiting this endpoint"})
+    }
+   else if (resultt) {
     res.json(response);
     }
     else {
@@ -82,7 +86,6 @@ app.post('/api/post/current/ver/autoco', async (req, res) => {
 });
 app.get('/api/get/updater/botautocheckout', async (req, res) => {
   const { apikey, sha} = req.query
-await clientss.connect()
 
   try {
     const database = clientss.db('asbir');
@@ -124,7 +127,6 @@ app.get('/api/get/canva/:gmail', async (req, res) => {
     console.log("New Otp Arrived\n" + gmail);
 
     try {
-        await client.connect();
         const db = client.db('otp');
         const collection = db.collection('canva');
 
@@ -184,3 +186,8 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+async function mongoconect() {
+  await client.connect();
+  await clientss.connect();
+}
