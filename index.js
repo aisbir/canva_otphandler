@@ -14,10 +14,13 @@ const mongoapikey = 'mongodb+srv://susiber:rushidev123@cluster0.3dweg2k.mongodb.
 const clientss = new MongoClient(mongoapikey)
 
 app.get('/api/get/current/ver/autoco', async (req, res) => {
+  const { apikey } = req.query.apikey
   try {
     await client.connect();
     const database = client.db('version');
     const collection = database.collection('co');
+    const cekapi = database.collection('lisensi');
+    const myApi = await cekapi.findOne({ apikey: apikey });
     const result = await collection.find({}).toArray();
     const commit = result.length > 0 ? {
       _id: result[0]._id,
@@ -36,8 +39,12 @@ app.get('/api/get/current/ver/autoco', async (req, res) => {
       commits: commit,
       all_commits: result
     };
-
+    if (myApi) {
     res.json(response);
+    }
+    else {
+      res.json({status: false, message: "Method Not Allowed"})
+    }
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ status: false, error: 'Internal Server Error' });
