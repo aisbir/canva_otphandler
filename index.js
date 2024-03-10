@@ -16,6 +16,8 @@ mongoconect()
 app.get('/api/get/current/ver/autoco', async (req, res) => {
   const apikey = req.query.apikey;
   try {
+    await client.connect();
+    await clientss.connect();
     const database = client.db('version');
     const collection = database.collection('co');
     const databass = clientss.db('asbir');
