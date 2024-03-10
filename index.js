@@ -96,7 +96,7 @@ app.get('/api/get/updater/botautocheckout', async (req, res) => {
     const result = await collection.findOne({ apikey: apikey });
 
     if (result) {
-      res.json({status: true, sha: sha, zip: `https://jar.aisbircubes.my.id/botautocostore/${sha}.zip`, code: 202});
+      res.json({status: true, sha: sha, zip: `https://jar.aisbircubes.my.id/botautocheckout/${sha}.zip`, code: 202});
     } else {
      return res.status(405).json({status: false, message: "Apikey Invalid Please Input Your Valid Apikey", code: 405})
     }
