@@ -1,4 +1,4 @@
-// index.js clean code by asbircubes
+// index.js clean code by asbircube
 
 const express = require('express');
 const app = express();
