@@ -188,8 +188,8 @@ app.get('/api/get/canva/:gmail', async (req, res) => {
 app.get('/', (req, res) => {
   res.json({status: true, message: "Hi welcome to aisbirgarapannganu api!"})
 });
-app.listen(port,"0.0.0.0", () => {
-  console.log(`Server is running at http://localhost:${port}`);
+app.listen(port, "0.0.0.0", function () {
+console.log("y")
 });
 
 async function mongoconect() {
